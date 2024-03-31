@@ -38,7 +38,6 @@ const Login = () => {
       name: nameInput,
       password: passwordInput,
     })
-    console.log(userStatus)
   }
   return (
     <Flex mt={40}>

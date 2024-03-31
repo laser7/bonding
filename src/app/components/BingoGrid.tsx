@@ -22,7 +22,6 @@ const BingoGrid: React.FC = () => {
     const fetchData = async () => {
       const dataRef = ref(db, '/bingo')
       onValue(dataRef, (snapshot) => {
-        console.log('get data:', snapshot.val())
         setBingoStatus(snapshot.val())
       })
     }
@@ -52,19 +51,16 @@ const BingoGrid: React.FC = () => {
 
     // Check if the current row is bingo
     if (newSelectedCells[row].every((selected) => selected)) {
-      console.log(`Row ${row + 1} is bingo!`)
       isBingo = true
     }
 
     // Check if the current column is bingo
     if (newSelectedCells.every((cells) => cells[col])) {
-      console.log(`Column ${col + 1} is bingo!`)
       isBingo = true
     }
 
     // Check if the diagonal from top-left to bottom-right is bingo
     if (row === col && newSelectedCells.every((cells, index) => cells[index])) {
-      console.log(`Diagonal from top-left to bottom-right is bingo!`)
       isBingo = true
     }
 
@@ -73,7 +69,6 @@ const BingoGrid: React.FC = () => {
       row + col === 4 &&
       newSelectedCells.every((cells, index) => cells[4 - index])
     ) {
-      console.log(`Diagonal from top-right to bottom-left is bingo!`)
       isBingo = true
     }
 
