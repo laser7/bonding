@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   VStack,
   Input,
@@ -15,14 +15,22 @@ import {
   FormLabel,
   Flex,
 } from '@chakra-ui/react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { todoState } from '../../../share/recoilStates/todoState'
+import { useRecoilValue } from 'recoil'
 import TodoRow from './TodoRow'
 import { TodoAttributes } from '../../../share/interfaces/todoAttributes'
 import { userState } from '../../../share/recoilStates/userState'
+import db from '../../../firebase'
+import {
+  getDatabase,
+  ref,
+  onValue,
+  update,
+  remove,
+  set,
+} from 'firebase/database'
 
 const TodoList: React.FC = () => {
-  const [todoStatus, setTodoStatus] = useState<TodoAttributes[]>([])
+  const [todoStatus, setTodoStatus] = useState<any[]>([])
   const [titleInput, setTitleInput] = useState<string>('')
   const [descriptionInput, setDescriptionInput] = useState<string>('')
   const userStatus = useRecoilValue(userState)
@@ -31,58 +39,34 @@ const TodoList: React.FC = () => {
     description: '',
     proposer: userStatus.name,
     vote: 0,
-    voter: [],
+    voter: '',
   })
+  const fetchTodoList = useCallback(async () => {
+    const dataRef = ref(db, '/todo')
+    onValue(dataRef, (snapshot) => {
+      const firebaseData = snapshot.val()
+      setTodoStatus(firebaseData)
+    })
+  }, [db])
 
-  const fetchTodoList = async () => {
-    try {
-      const response = await fetch('/api/todo')
-      if (!response.ok) {
-        throw new Error('Failed to fetch todo list')
-      }
-      const data = await response.json()
-      setTodoStatus(data)
-    } catch (error) {
-      console.error('Error fetching todo list:', error)
-    }
-  }
   useEffect(() => {
     fetchTodoList()
-  }, [])
-  const deleteItem = async (index: number) => {
-    try {
-      const response = await fetch('/api/todo', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ index }), // Include index in the request body
-      })
-      if (!response.ok) {
-        throw new Error('Failed to delete item')
-      }
-      fetchTodoList() // Refetch the todo list after deletion
-    } catch (error) {
-      console.error('Error deleting item:', error)
-    }
-  }
-  const addItem = async () => {
-    try {
-      const response = await fetch('/api/todo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
 
-        body: JSON.stringify({ action: 'add', todo: newProposal }),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to add new item')
-      }
-      fetchTodoList() // Refetch the todo list after addition
-    } catch (error) {
-      console.error('Error adding new item:', error)
+    // Clean up any resources if needed
+    return () => {
+      // Cleanup code
     }
+  }, [fetchTodoList])
+  const addItem = () => {
+    const dataRef = ref(db, `/todo/${todoStatus.length}`)
+    set(dataRef, {
+      ...newProposal,
+    })
+  }
+
+  const deleteItem = (index: number) => {
+    const dataRef = ref(db, `/todo/${index}`)
+    remove(dataRef)
   }
 
   useEffect(() => {
@@ -91,7 +75,7 @@ const TodoList: React.FC = () => {
       description: descriptionInput,
       proposer: userStatus.name,
       vote: 0,
-      voter: [],
+      voter: '',
     })
   }, [titleInput, descriptionInput])
 

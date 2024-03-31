@@ -30,8 +30,8 @@ export const bingoList = [
     status: false,
   },
   {
-    icon: '🍕',
-    content: 'pizza',
+    icon: '🏋️',
+    content: '三个月硬拉110',
     status: false,
   },
   {

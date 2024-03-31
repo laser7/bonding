@@ -5,7 +5,6 @@ interface BingoTableProps {
   selected: boolean
   icon: string
   content: string
-  key: number
   index: number
 }
 
@@ -13,7 +12,6 @@ const BingoTable: React.FC<BingoTableProps> = ({
   content,
   selected,
   icon,
-  key,
   index,
 }) => {
   return (

@@ -14,7 +14,6 @@ interface BingoCellProps {
   onClick: () => void
   icon: string
   content: string
-  key: number
 }
 
 const BingoCell: React.FC<BingoCellProps> = ({
@@ -22,7 +21,6 @@ const BingoCell: React.FC<BingoCellProps> = ({
   selected,
   onClick,
   icon,
-  key,
 }) => {
   const [isHovering, setIsHovering] = useState(false)
   const colors = useColor()

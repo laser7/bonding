@@ -7,6 +7,8 @@ import BingoCell from './BIngoCell'
 import { IoInformationCircleOutline } from 'react-icons/io5'
 import { useColor } from '../../../share/hook/use-color.hook'
 import BingoTable from './BingoTable'
+import db from '../../../firebase'
+import { getDatabase, ref, onValue, update } from 'firebase/database'
 
 const BingoGrid: React.FC = () => {
   const [selectedCells, setSelectedCells] = useState<boolean[][]>(
@@ -17,44 +19,30 @@ const BingoGrid: React.FC = () => {
   const colors = useColor()
 
   useEffect(() => {
-    async function fetchBingoData() {
-      try {
-        const response = await fetch('/api/bingo') // Fetch data from the API route
-        if (!response.ok) {
-          throw new Error('Failed to fetch bingo list')
-        }
-        const data = await response.json() // Parse JSON response
-        console.log('get dtata:', data)
-        setBingoStatus(data)
-      } catch (error) {
-        console.error('Error fetching bingo list:', error)
-      }
-    }
-
-    fetchBingoData() // Call the fetchData function when the component mounts
-  }, [])
-  const updateStatus = async (index: number, newStatus: boolean) => {
-    try {
-      const response = await fetch('/api/bingo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ index, status: newStatus }), // Include index and new status in the request body
+    const fetchData = async () => {
+      const dataRef = ref(db, '/bingo')
+      onValue(dataRef, (snapshot) => {
+        console.log('get data:', snapshot.val())
+        setBingoStatus(snapshot.val())
       })
-
-      if (!response.ok) {
-        throw new Error('Failed to update status')
-      }
-
-      // If the status update is successful, update the bingoList state
-      const updatedBingoList = [...bingoStatus]
-      updatedBingoList[index].status = newStatus
-      setBingoStatus(updatedBingoList)
-    } catch (error) {
-      console.error('Error updating status:', error)
     }
+
+    fetchData()
+
+    // Clean up any resources if needed
+    return () => {
+      // Cleanup code
+    }
+  }, [])
+
+  const updateStatus = (index: number, newStatus: boolean) => {
+    const todoRef = ref(db, `bingo/${index}`)
+
+    update(todoRef, {
+      status: newStatus,
+    })
   }
+
   const handleClick = (index: number, row: number, col: number) => {
     const newSelectedCells = [...selectedCells]
     newSelectedCells[row][col] = !newSelectedCells[row][col]
@@ -92,15 +80,6 @@ const BingoGrid: React.FC = () => {
     if (isBingo) {
       console.log('Bingo!')
     }
-
-    // setBingoStatus((prevStatus) => {
-    //   const updatedStatus = [...prevStatus]
-    //   updatedStatus[index] = {
-    //     ...updatedStatus[index],
-    //     status: !updatedStatus[index].status,
-    //   }
-    //   return updatedStatus
-    // })
     updateStatus(index, !bingoStatus[index].status)
   }
   return (

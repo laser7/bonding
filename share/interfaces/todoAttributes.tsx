@@ -3,5 +3,5 @@ export interface TodoAttributes {
   description: string
   proposer: string
   vote: number
-  voter: string[]
+  voter: string
 }
