@@ -22,7 +22,7 @@ export default function Page() {
       height={isSmallerThan768 ? '115rem' : '93rem'}
       bgSize='cover'
       bgPosition='center'
-      backgroundImage="url('https://img.freepik.com/free-photo/white-fabric-texture-background-design-element_53876-107985.jpg?w=1800&t=st=1712841570~exp=1712842170~hmac=09c5552f87ad8e330af3956cb513f6d89343000c7a86388e40be316846ef158d')"
+      backgroundImage="url('https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?q=80&w=2803&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
     >
       <Navbar renderPage={renderPage} setRenderPage={setRenderPage} />
       <Flex width='96%' mt={8} justifyContent='center'>
