@@ -2,33 +2,41 @@ export const userList = [
   {
     name: 'vivian',
     password: '960717',
+    role: 'user',
   },
   {
     name: 'lei',
     password: '960719',
+    role: 'admin',
   },
   {
     name: 'alex',
     password: '931111',
+    role: 'admin',
   },
   {
     name: 'kangzelin',
     password: '960102',
+    role: 'user',
   },
   {
     name: 'zhangyuanxiao',
     password: 'bonding2024',
+    role: 'user',
   },
   {
-    name: 'cutomer1',
+    name: 'customer1',
     password: 'bonding2024',
+    role: 'user',
   },
   {
-    name: 'cutomer2',
+    name: 'customer2',
     password: 'bonding2024',
+    role: 'user',
   },
   {
-    name: 'cutomer3',
+    name: 'cusomer3',
     password: 'bonding2024',
+    role: 'user',
   },
 ]

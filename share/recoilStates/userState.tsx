@@ -6,6 +6,7 @@ const { persistAtom } = recoilPersist()
 const initialUserState = {
   name: '',
   password: '',
+  role: '',
 }
 export const userState = atom<UserAttributes>({
   key: 'user',

@@ -19,7 +19,6 @@ const TodoRow: React.FC<{
 }> = ({ todo, index, handleRemoveTodo, fetchTodoList }) => {
   const colors = useColor()
   const userStatus = useRecoilValue(userState)
-  const [isVoted, setIsVoted] = useState(false)
 
   const updateRow = (index: number, todo: TodoAttributes) => {
     const todoRef = ref(db, `todo/${index}`)
@@ -31,7 +30,14 @@ const TodoRow: React.FC<{
   const addVote = () => {
     const strVotertoArray = todo.voter.split(',')
     if (todo.voter.includes(userStatus.name)) {
-      setIsVoted(true)
+      const voterList: string[] = strVotertoArray
+      voterList.push(userStatus.name)
+      updateRow(index, {
+        ...todo,
+        vote: todo.vote - 1,
+        voter: voterList.toString(),
+      })
+      fetchTodoList()
     } else {
       const voterList: string[] = strVotertoArray
       voterList.push(userStatus.name)

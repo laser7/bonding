@@ -27,21 +27,24 @@ const BingoGrid: React.FC = () => {
     }
 
     fetchData()
-
-    // Clean up any resources if needed
-    return () => {
-      // Cleanup code
-    }
   }, [])
 
-  const updateStatus = (index: number, newStatus: boolean) => {
+  const updateStatus = (index: number, newStatus?: boolean) => {
     const todoRef = ref(db, `bingo/${index}`)
 
     update(todoRef, {
       status: newStatus,
     })
   }
+  const editBingo = (index: number, bingo: BingoAttributes) => {
+    const todoRef = ref(db, `bingo/${index}`)
 
+    update(todoRef, {
+      icon: bingo.icon,
+      content: bingo.content,
+      status: bingo.status,
+    })
+  }
   const handleClick = (index: number, row: number, col: number) => {
     const newSelectedCells = [...selectedCells]
     newSelectedCells[row][col] = !newSelectedCells[row][col]
@@ -116,6 +119,7 @@ const BingoGrid: React.FC = () => {
           icon={bingo.icon}
           index={index}
           content={bingo.content}
+          editBingo={editBingo}
         />
       ))}
     </Box>

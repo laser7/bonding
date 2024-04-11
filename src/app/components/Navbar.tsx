@@ -29,6 +29,7 @@ const Navbar: React.FC<{
     setUserStatus({
       name: '',
       password: '',
+      role: '',
     })
   }
   return (
@@ -67,6 +68,7 @@ const Navbar: React.FC<{
           width={isSmallerThan768 ? '100%' : 'auto'}
           onClick={() => setRenderPage('bingo')}
           fontFamily='monospace'
+          _hover={{ bg: colors.highlight }}
         >
           Bingo
         </Button>
@@ -77,9 +79,23 @@ const Navbar: React.FC<{
           width={isSmallerThan768 ? '100%' : 'auto'}
           onClick={() => setRenderPage('todolist')}
           fontFamily='monospace'
+          _hover={{ bg: colors.highlight }}
         >
           Todos
         </Button>
+        {
+          <Button
+            colorScheme='whiteAlpha'
+            mr={4}
+            mb={isSmallerThan768 ? 4 : 0}
+            width={isSmallerThan768 ? '100%' : 'auto'}
+            onClick={() => setRenderPage('plan')}
+            fontFamily='monospace'
+            _hover={{ bg: colors.highlight }}
+          >
+            Plan
+          </Button>
+        }
       </Box>
       <Box>
         <Menu>
@@ -88,6 +104,7 @@ const Navbar: React.FC<{
             colorScheme='whiteAlpha'
             width={isSmallerThan768 ? '100%' : 'auto'}
             mb={isSmallerThan768 ? 4 : 0}
+            _hover={{ bg: colors.highlight }}
           >
             <FaRegUserCircle size={25} />
           </MenuButton>

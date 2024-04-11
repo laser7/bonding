@@ -37,6 +37,7 @@ const Login = () => {
     setUserStatus({
       name: nameInput,
       password: passwordInput,
+      role: userList.find((user) => user.name === nameInput)?.role || 'user',
     })
   }
   return (

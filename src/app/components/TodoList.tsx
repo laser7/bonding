@@ -14,6 +14,7 @@ import {
   FormControl,
   FormLabel,
   Flex,
+  Box,
 } from '@chakra-ui/react'
 import { useRecoilValue } from 'recoil'
 import TodoRow from './TodoRow'
@@ -28,6 +29,7 @@ import {
   remove,
   set,
 } from 'firebase/database'
+import { useColor } from '../../../share/hook/use-color.hook'
 
 const TodoList: React.FC = () => {
   const [todoStatus, setTodoStatus] = useState<any[]>([])
@@ -80,6 +82,7 @@ const TodoList: React.FC = () => {
   }, [titleInput, descriptionInput])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const colors = useColor()
   return (
     <Flex w='97%' ml='3%' flexDir='column'>
       {todoStatus.map((todo, index) => (
@@ -128,7 +131,36 @@ const TodoList: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Button onClick={onOpen}>Add Todo</Button>
+      {/* <Button colorScheme='beige' onClick={onOpen}>
+        Add Todo
+      </Button> */}
+      <Box
+        as='button'
+        height='3rem'
+        transition='all 0.2s cubic-bezier(.08,.52,.52,1)'
+        border='1px'
+        px='8px'
+        ml={1}
+        borderRadius='7px'
+        fontSize='16px'
+        fontWeight='semibold'
+        bg={colors.primaryColor}
+        borderColor='#ccd0d5'
+        onClick={onOpen}
+        color='white'
+        _hover={{ bg: colors.highlight }}
+        _active={{
+          bg: '#dddfe2',
+          transform: 'scale(0.98)',
+          borderColor: '#bec3c9',
+        }}
+        _focus={{
+          boxShadow:
+            '0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)',
+        }}
+      >
+        Add Todo
+      </Box>
     </Flex>
   )
 }

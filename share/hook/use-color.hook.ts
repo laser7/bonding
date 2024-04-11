@@ -7,7 +7,7 @@ export type colors = {
   textColor: string
   whiteBlackColor: string
   onHover: string
-  mainBackground: string
+  thirdColor: string
   borderColor: string
   blurGray: string
   darkGray: string
@@ -22,7 +22,7 @@ export function useColor(): colors {
     textColor: useColorModeValue('#707070', '#a799b7'),
     whiteBlackColor: useColorModeValue('#ffffff', '#ffffff'),
     onHover: '#E8DFAD',
-    mainBackground: useColorModeValue('white', 'gray.600'),
+    thirdColor: 'B2A14F',
     borderColor: '#E6E6E6',
     blurGray: '#B9B9C4',
     darkGray: '#646460',
