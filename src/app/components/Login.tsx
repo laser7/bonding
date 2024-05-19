@@ -2,25 +2,23 @@ import React, { useState } from 'react'
 import {
   Flex,
   Button,
-  useMediaQuery,
   FormControl,
   FormLabel,
   Input,
   FormHelperText,
 } from '@chakra-ui/react'
 
-import { useRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { userState } from '../../../share/recoilStates/userState'
 import { userList } from '../../../share/constant/userList'
 import { useColor } from '../../../share/hook/use-color.hook'
 
 const Login = () => {
-  const [isSmallerThan768] = useMediaQuery('(max-width: 768px)')
   const [nameInput, setNameInput] = useState<string>('')
   const [passwordInput, setPasswordInput] = useState<string>('')
   const colors = useColor()
   const [isUserError, setIsUserError] = useState<boolean>(false)
-  const [userStatus, setUserStatus] = useRecoilState(userState)
+  const setUserStatus = useSetRecoilState(userState)
   const checkUser = () => {
     userList.map((user, index) => {
       if (user.name === nameInput) {
@@ -62,7 +60,6 @@ const Login = () => {
         <Input
           focusBorderColor={colors.primaryColor}
           id='inputUserpsw'
-          bgColor='white'
           value={passwordInput}
           onChange={(e) => {
             setPasswordInput(e.target.value)

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Box, Text, Flex } from '@chakra-ui/react'
+import React from 'react'
+import { Button, Text, Flex } from '@chakra-ui/react'
 
 import { TodoAttributes } from '../../../share/interfaces/todoAttributes'
 import { MdDeleteOutline } from 'react-icons/md'
@@ -29,18 +29,10 @@ const TodoRow: React.FC<{
   }
   const addVote = () => {
     const strVotertoArray = todo.voter.split(',')
-    if (todo.voter.includes(userStatus.name)) {
+    if (!todo.voter.includes(userStatus.name)) {
       const voterList: string[] = strVotertoArray
       voterList.push(userStatus.name)
-      updateRow(index, {
-        ...todo,
-        vote: todo.vote - 1,
-        voter: voterList.toString(),
-      })
-      fetchTodoList()
-    } else {
-      const voterList: string[] = strVotertoArray
-      voterList.push(userStatus.name)
+      console.log('2', strVotertoArray)
       updateRow(index, {
         ...todo,
         vote: todo.vote + 1,
@@ -49,25 +41,6 @@ const TodoRow: React.FC<{
       fetchTodoList()
     }
   }
-  // const updateRow = async (index: number, todo: TodoAttributes) => {
-  //   try {
-  //     const response = await fetch('/api/todo', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ action: 'update', index: index, todo: todo }), // Include index and new status in the request body
-  //     })
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to update status')
-  //     }
-
-  //     //update the list
-  //   } catch (error) {
-  //     console.error('Error updating status:', error)
-  //   }
-  // }
   return (
     <Flex
       key={index}

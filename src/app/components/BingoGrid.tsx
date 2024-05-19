@@ -1,4 +1,3 @@
-// components/Bingo.tsx
 import React, { useEffect, useState } from 'react'
 import { Box, Flex, Grid, Text, useMediaQuery } from '@chakra-ui/react'
 
@@ -8,7 +7,7 @@ import { IoInformationCircleOutline } from 'react-icons/io5'
 import { useColor } from '../../../share/hook/use-color.hook'
 import BingoTable from './BingoTable'
 import db from '../../../firebase'
-import { getDatabase, ref, onValue, update } from 'firebase/database'
+import { ref, onValue, update } from 'firebase/database'
 
 const BingoGrid: React.FC = () => {
   const [selectedCells, setSelectedCells] = useState<boolean[][]>(

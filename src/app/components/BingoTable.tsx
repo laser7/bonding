@@ -1,23 +1,15 @@
 import {
-  ButtonGroup,
   Editable,
   EditableInput,
   EditablePreview,
   Flex,
-  IconButton,
-  Input,
   Text,
-  useEditableControls,
 } from '@chakra-ui/react'
-import { FaCheck, FaCheckCircle } from 'react-icons/fa'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { useColor } from '../../../share/hook/use-color.hook'
+import { FaCheckCircle } from 'react-icons/fa'
 import { useRecoilValue } from 'recoil'
 import { userState } from '../../../share/recoilStates/userState'
 import { BingoAttributes } from '../../../share/interfaces/bingoAttributes'
-import { use, useEffect, useState } from 'react'
-import { IoIosClose } from 'react-icons/io'
-import { set } from 'firebase/database'
+import { useEffect, useState } from 'react'
 
 interface BingoTableProps {
   selected: boolean
@@ -34,7 +26,6 @@ const BingoTable: React.FC<BingoTableProps> = ({
   index,
   editBingo,
 }) => {
-  const colors = useColor()
   const userStatus = useRecoilValue(userState)
   const [bingoStatus, setBingoStatus] = useState<BingoAttributes>({
     icon: icon,

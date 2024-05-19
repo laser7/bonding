@@ -23,9 +23,10 @@ const SinglePlanCard: React.FC<{
       }}
       contentArrowStyle={{ borderRight: '7px solid  #A8A69B' }}
       // date={plan.date}
-      iconStyle={{ background: colors.blurGray, color: '#fff' }}
+      iconStyle={{ background: colors.highlight, color: '#fff' }}
       icon={
         <AiOutlineDelete
+          color={colors.primaryColor}
           onClick={() => {
             deleteItem(plan)
           }}

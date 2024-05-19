@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import {
-  VStack,
   Input,
   Button,
   useDisclosure,
@@ -21,14 +20,7 @@ import TodoRow from './TodoRow'
 import { TodoAttributes } from '../../../share/interfaces/todoAttributes'
 import { userState } from '../../../share/recoilStates/userState'
 import db from '../../../firebase'
-import {
-  getDatabase,
-  ref,
-  onValue,
-  update,
-  remove,
-  set,
-} from 'firebase/database'
+import { ref, onValue, remove, set } from 'firebase/database'
 import { useColor } from '../../../share/hook/use-color.hook'
 
 const TodoList: React.FC = () => {
@@ -53,11 +45,6 @@ const TodoList: React.FC = () => {
 
   useEffect(() => {
     fetchTodoList()
-
-    // Clean up any resources if needed
-    return () => {
-      // Cleanup code
-    }
   }, [fetchTodoList])
   const addItem = () => {
     const dataRef = ref(db, `/todo/${todoStatus.length}`)
@@ -131,36 +118,13 @@ const TodoList: React.FC = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {/* <Button colorScheme='beige' onClick={onOpen}>
-        Add Todo
-      </Button> */}
-      <Box
-        as='button'
-        height='3rem'
-        transition='all 0.2s cubic-bezier(.08,.52,.52,1)'
-        border='1px'
-        px='8px'
-        ml={1}
-        borderRadius='7px'
-        fontSize='16px'
-        fontWeight='semibold'
-        bg={colors.primaryColor}
-        borderColor='#ccd0d5'
+      <Button
+        bgColor={colors.primaryColor}
+        color={colors.highlight}
         onClick={onOpen}
-        color='white'
-        _hover={{ bg: colors.highlight }}
-        _active={{
-          bg: '#dddfe2',
-          transform: 'scale(0.98)',
-          borderColor: '#bec3c9',
-        }}
-        _focus={{
-          boxShadow:
-            '0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)',
-        }}
       >
         Add Todo
-      </Box>
+      </Button>
     </Flex>
   )
 }

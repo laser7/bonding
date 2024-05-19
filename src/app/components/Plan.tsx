@@ -15,25 +15,17 @@ import {
   Select,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import db from '../../../firebase'
-import {
-  getDatabase,
-  ref,
-  onValue,
-  update,
-  remove,
-  set,
-} from 'firebase/database'
+import { ref, onValue, remove, set } from 'firebase/database'
 import { FaRegCalendarPlus } from 'react-icons/fa'
 import { PlanAttributes } from '../../../share/interfaces/planAttribute'
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from 'react-vertical-timeline-component'
+import { VerticalTimeline } from 'react-vertical-timeline-component'
 import SinglePlanCard from './SinglePlanCard'
+import { useColor } from '../../../share/hook/use-color.hook'
 
 const Plan: React.FC = () => {
+  const colors = useColor()
   const [planStatus, setPlanStatus] = useState<any[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [titleInput, setTitleInput] = useState<string>('')
@@ -74,8 +66,8 @@ const Plan: React.FC = () => {
   return (
     <Flex flexDir='column' justifyContent='space-between'>
       <Center marginY={5}>
-        <Button w={'100%'} onClick={onOpen}>
-          <FaRegCalendarPlus size={30} />
+        <Button w={'100%'} bgColor={colors.primaryColor} onClick={onOpen}>
+          <FaRegCalendarPlus color='white' size={30} />
         </Button>
       </Center>
       <Modal isOpen={isOpen} onClose={onClose}>

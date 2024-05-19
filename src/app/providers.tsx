@@ -1,13 +1,7 @@
 'use client'
 
 import { ChakraProvider } from '@chakra-ui/react'
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil'
+import { RecoilRoot } from 'recoil'
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <RecoilRoot>
