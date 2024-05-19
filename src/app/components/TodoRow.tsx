@@ -32,7 +32,6 @@ const TodoRow: React.FC<{
     if (!todo.voter.includes(userStatus.name)) {
       const voterList: string[] = strVotertoArray
       voterList.push(userStatus.name)
-      console.log('2', strVotertoArray)
       updateRow(index, {
         ...todo,
         vote: todo.vote + 1,

@@ -13,7 +13,7 @@ import 'react-vertical-timeline-component/style.min.css'
 export default function Page() {
   const NoSSR = dynamic(() => import('./components/BingoGrid'), { ssr: false })
   const userStatus = useRecoilValue(userState)
-  const [renderPage, setRenderPage] = useState('bingo') //todolist, bingo
+  const [renderPage, setRenderPage] = useState('bingo')
   const [isSmallerThan768] = useMediaQuery('(max-width: 768px)')
   return (
     <Flex
