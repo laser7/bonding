@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
   Flex,
   Box,
@@ -11,6 +11,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Spinner,
 } from "@chakra-ui/react"
 import { RiGhostLine } from "react-icons/ri"
 import { FaRegUserCircle } from "react-icons/fa"
@@ -24,12 +25,19 @@ const Navbar: React.FC<{
 }> = ({ renderPage, setRenderPage }) => {
   const [isSmallerThan768] = useMediaQuery("(max-width: 768px)")
   const [userStatus, setUserStatus] = useRecoilState(userState)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
+
   const colors = useColor()
   const handleUserLogout = () => {
     setUserStatus({
       name: "",
       password: "",
       role: "",
+      renderPage: "",
     })
   }
   return (
@@ -109,7 +117,13 @@ const Navbar: React.FC<{
             <FaRegUserCircle size={25} />
           </MenuButton>
           <MenuList>
-            <MenuItem>{userStatus.name}</MenuItem>
+            {isHydrated ? (
+              <MenuItem>{userStatus.name}</MenuItem>
+            ) : (
+              <MenuItem>
+                <Spinner color="yellow.300" />
+              </MenuItem>
+            )}
             <MenuItem onClick={() => handleUserLogout()}>Logout</MenuItem>
           </MenuList>
         </Menu>
