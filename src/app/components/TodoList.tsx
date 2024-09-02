@@ -14,6 +14,7 @@ import {
   FormLabel,
   Flex,
   Box,
+  useToast,
 } from "@chakra-ui/react"
 import { useRecoilValue } from "recoil"
 import TodoRow from "./TodoRow"
@@ -28,6 +29,7 @@ const TodoList: React.FC = () => {
   const [titleInput, setTitleInput] = useState<string>("")
   const [descriptionInput, setDescriptionInput] = useState<string>("")
   const userStatus = useRecoilValue(userState)
+  const toast = useToast()
   const [newProposal, setNewProposal] = useState<TodoAttributes>({
     title: "",
     description: "",
@@ -64,8 +66,16 @@ const TodoList: React.FC = () => {
       key: newItemRef.key,
     })
       .then(() => {
-        console.log("Item added successfully")
-        fetchTodoList()
+        toast({
+          position: "top",
+          duration: 3000,
+          render: () => (
+            <Box color="white" p={3} bg="yellow.300" borderRadius="md">
+              🤝 添加成功
+            </Box>
+          ),
+        })
+        onClose()
       })
       .catch((error) => {
         console.error("Error adding item:", error)
@@ -76,8 +86,15 @@ const TodoList: React.FC = () => {
     const dataRef = ref(db, `/todo/${key}`)
     remove(dataRef)
       .then(() => {
-        console.log("Item removed successfully")
-        fetchTodoList()
+        toast({
+          position: "top",
+          duration: 3000,
+          render: () => (
+            <Box color="white" p={3} bg="yellow.300" borderRadius="md">
+              👌 删除成功
+            </Box>
+          ),
+        })
       })
       .catch((error) => {
         console.error("Error removing item:", error)
@@ -97,7 +114,7 @@ const TodoList: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const colors = useColor()
   return (
-    <Flex w="97%" ml="3%" flexDir="column">
+    <Flex w="97%" ml="3%" h="100%" flexDir="column">
       {todoStatus.map((todo, index) => (
         <TodoRow
           key={todo.key}

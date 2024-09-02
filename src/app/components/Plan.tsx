@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Flex,
@@ -14,10 +15,11 @@ import {
   ModalOverlay,
   Select,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import db from "../../../firebase"
-import { ref, onValue, remove, set } from "firebase/database"
+import { ref, onValue, remove, set, off } from "firebase/database"
 import { FaRegCalendarPlus } from "react-icons/fa"
 import { PlanAttributes } from "../../../share/interfaces/planAttribute"
 import { VerticalTimeline } from "react-vertical-timeline-component"
@@ -26,6 +28,7 @@ import { useColor } from "../../../share/hook/use-color.hook"
 
 const Plan: React.FC = () => {
   const colors = useColor()
+  const toast = useToast()
   const [planStatus, setPlanStatus] = useState<any[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [titleInput, setTitleInput] = useState<string>("")
@@ -37,13 +40,31 @@ const Plan: React.FC = () => {
     type: "",
   })
   useEffect(() => {
+    const dataRef = ref(db, "/plan")
+
     const fetchData = async () => {
-      const dataRef = ref(db, "/plan")
-      onValue(dataRef, (snapshot) => {
-        setPlanStatus(snapshot.val())
-      })
+      try {
+        onValue(dataRef, (snapshot) => {
+          const data = snapshot.val()
+          if (data) {
+            const plansArray = Object.keys(data).map((key) => ({
+              key,
+              ...data[key],
+            }))
+            setPlanStatus(plansArray)
+          } else {
+            setPlanStatus([]) // Handle the case where there is no data
+          }
+        })
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     }
+
     fetchData()
+    return () => {
+      off(dataRef)
+    }
   }, [])
   useEffect(() => {
     setNewProposal({
@@ -57,16 +78,63 @@ const Plan: React.FC = () => {
     set(dataRef, {
       ...newProposal,
     })
+      .then(() => {
+        toast({
+          position: "top",
+          duration: 3000,
+          render: () => (
+            <Box color="white" p={3} bg="yellow.300" borderRadius="md">
+              🤝 添加成功
+            </Box>
+          ),
+        })
+        onClose()
+      })
+      .catch((error) => {
+        console.error("Error adding item:", error)
+        toast({
+          title: "添加失败",
+          description: "请稍后再试。",
+          status: "error",
+          duration: 3000,
+        })
+      })
   }
   const deleteItem = (plan: PlanAttributes) => {
-    const index = planStatus.findIndex((item) => item === plan)
-    const dataRef = ref(db, `/plan/${index - 1}`)
+    const dataRef = ref(db, `/plan/${plan.key}`)
     remove(dataRef)
+      .then(() => {
+        toast({
+          position: "top",
+          duration: 3000,
+          render: () => (
+            <Box color="white" p={3} bg="yellow.300" borderRadius="md">
+              👅 删除成功
+            </Box>
+          ),
+        })
+        onClose()
+      })
+      .catch((error) => {
+        console.error("Error adding item:", error)
+        toast({
+          title: "删除失败",
+          description: "请稍后再试。",
+          status: "error",
+          duration: 3000,
+        })
+      })
   }
+
   return (
     <Flex flexDir="column" justifyContent="space-between">
       <Center marginY={5}>
-        <Button w={"100%"} bgColor={colors.primaryColor} onClick={onOpen}>
+        <Button
+          w={"100%"}
+          h={"100%"}
+          bgColor={colors.primaryColor}
+          onClick={onOpen}
+        >
           <FaRegCalendarPlus color="white" size={30} />
         </Button>
       </Center>
