@@ -2,7 +2,7 @@
 import Navbar from "./components/Navbar"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
-import { Spinner, useMediaQuery, Flex } from "@chakra-ui/react"
+import { Spinner, Flex } from "@chakra-ui/react"
 import TodoList from "./components/TodoList"
 import Login from "./components/Login"
 import { useRecoilState } from "recoil"
@@ -16,7 +16,6 @@ export default function Page() {
   const [renderPage, setRenderPage] = useState(
     userStatus.renderPage ? userStatus.renderPage : "bingo"
   )
-  const [isSmallerThan768] = useMediaQuery("(max-width: 768px)")
   const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
@@ -31,7 +30,7 @@ export default function Page() {
   return (
     <Flex
       flexDir={"column"}
-      height={isSmallerThan768 ? "115rem" : "105rem"}
+      height="auto"
       bgSize="cover"
       bgPosition="center"
       backgroundImage="url('https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?q=80&w=2803&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
