@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from "react"
 import {
   Input,
   Button,
@@ -14,48 +14,74 @@ import {
   FormLabel,
   Flex,
   Box,
-} from '@chakra-ui/react'
-import { useRecoilValue } from 'recoil'
-import TodoRow from './TodoRow'
-import { TodoAttributes } from '../../../share/interfaces/todoAttributes'
-import { userState } from '../../../share/recoilStates/userState'
-import db from '../../../firebase'
-import { ref, onValue, remove, set } from 'firebase/database'
-import { useColor } from '../../../share/hook/use-color.hook'
+} from "@chakra-ui/react"
+import { useRecoilValue } from "recoil"
+import TodoRow from "./TodoRow"
+import { TodoAttributes } from "../../../share/interfaces/todoAttributes"
+import { userState } from "../../../share/recoilStates/userState"
+import db from "../../../firebase"
+import { ref, onValue, remove, push, set } from "firebase/database"
+import { useColor } from "../../../share/hook/use-color.hook"
 
 const TodoList: React.FC = () => {
   const [todoStatus, setTodoStatus] = useState<any[]>([])
-  const [titleInput, setTitleInput] = useState<string>('')
-  const [descriptionInput, setDescriptionInput] = useState<string>('')
+  const [titleInput, setTitleInput] = useState<string>("")
+  const [descriptionInput, setDescriptionInput] = useState<string>("")
   const userStatus = useRecoilValue(userState)
   const [newProposal, setNewProposal] = useState<TodoAttributes>({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     proposer: userStatus.name,
     vote: 0,
-    voter: '',
+    voter: "",
   })
   const fetchTodoList = useCallback(async () => {
-    const dataRef = ref(db, '/todo')
+    const dataRef = ref(db, "/todo")
     onValue(dataRef, (snapshot) => {
-      const firebaseData = snapshot.val()
-      setTodoStatus(firebaseData)
+      const todos: TodoAttributes[] = []
+      snapshot.forEach((childSnapshot) => {
+        const todoData = childSnapshot.val() as Omit<TodoAttributes, "key">
+        todos.push({
+          key: childSnapshot.key || "",
+          ...todoData,
+        })
+      })
+
+      setTodoStatus(todos)
     })
   }, [db])
 
   useEffect(() => {
     fetchTodoList()
   }, [fetchTodoList])
+
   const addItem = () => {
-    const dataRef = ref(db, `/todo/${todoStatus.length}`)
-    set(dataRef, {
+    const dataRef = ref(db, "/todo")
+    const newItemRef = push(dataRef)
+
+    set(newItemRef, {
       ...newProposal,
+      key: newItemRef.key,
     })
+      .then(() => {
+        console.log("Item added successfully")
+        fetchTodoList()
+      })
+      .catch((error) => {
+        console.error("Error adding item:", error)
+      })
   }
 
-  const deleteItem = (index: number) => {
-    const dataRef = ref(db, `/todo/${index}`)
+  const deleteItem = (key: string) => {
+    const dataRef = ref(db, `/todo/${key}`)
     remove(dataRef)
+      .then(() => {
+        console.log("Item removed successfully")
+        fetchTodoList()
+      })
+      .catch((error) => {
+        console.error("Error removing item:", error)
+      })
   }
 
   useEffect(() => {
@@ -64,21 +90,21 @@ const TodoList: React.FC = () => {
       description: descriptionInput,
       proposer: userStatus.name,
       vote: 0,
-      voter: '',
+      voter: "",
     })
   }, [titleInput, descriptionInput])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const colors = useColor()
   return (
-    <Flex w='97%' ml='3%' flexDir='column'>
+    <Flex w="97%" ml="3%" flexDir="column">
       {todoStatus.map((todo, index) => (
         <TodoRow
-          key={index}
+          key={todo.key}
           todo={todo}
           index={index}
           fetchTodoList={fetchTodoList}
-          handleRemoveTodo={() => deleteItem(index)}
+          handleRemoveTodo={() => deleteItem(todo.key)}
         />
       ))}
 
@@ -95,7 +121,7 @@ const TodoList: React.FC = () => {
                 onChange={(e) => {
                   setTitleInput(e.target.value)
                 }}
-                type='text'
+                type="text"
               />
               <FormLabel>简介</FormLabel>
               <Input
@@ -103,16 +129,16 @@ const TodoList: React.FC = () => {
                 onChange={(e) => {
                   setDescriptionInput(e.target.value)
                 }}
-                type='text'
+                type="text"
               />
             </FormControl>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant='ghost' onClick={addItem}>
+            <Button variant="ghost" onClick={addItem}>
               提交
             </Button>
           </ModalFooter>
